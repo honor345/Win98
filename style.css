@@ -1,0 +1,3003 @@
+/* ==========================================================================
+   01. Theme Tokens And Reset
+   ========================================================================== */
+
+:root {
+    --color-desktop: #008080;
+    --color-desktop-dark: #0a5f5f;
+    --color-surface: #c0c0c0;
+    --color-surface-light: #dfdfdf;
+    --color-surface-mid: #a9a9a9;
+    --color-surface-dark: #808080;
+    --color-shadow: #404040;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-blue: #000080;
+    --color-blue-light: #1084d0;
+    --color-selection: #0a246a;
+    --color-selection-alt: #316ac5;
+    --color-tooltip: #ffffe1;
+    --color-warning: #ffcb00;
+    --color-error: #cf3d33;
+    --color-green: #008000;
+    --color-felt: #0d6d40;
+    --taskbar-height: 30px;
+    --titlebar-height: 19px;
+    --menu-item-height: 22px;
+    --desktop-icon-width: 78px;
+    --desktop-icon-height: 76px;
+    --font-shell: Tahoma, "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    position: relative;
+    font: 11px/1.2 var(--font-shell);
+    color: var(--color-black);
+    background: var(--color-desktop);
+    cursor: default;
+    user-select: none;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    color: inherit;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+    user-select: text;
+}
+
+.hidden {
+    display: none !important;
+}
+
+[aria-hidden="true"] {
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   02. Classic Surface Primitives
+   ========================================================================== */
+
+.win-shell,
+.win-button,
+.window-control,
+.toolbar-button,
+.tray-button,
+.clock-button,
+.taskbar-button {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    border-left: 1px solid var(--color-white);
+    border-right: 1px solid var(--color-black);
+    border-bottom: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 var(--color-surface-light), inset -1px -1px 0 var(--color-surface-dark);
+}
+
+.win-inset,
+.field,
+.status-field,
+.toolbar-address__input,
+.browser-address__input,
+.notepad__editor,
+.cmd__screen,
+.paint__canvas-frame,
+.explorer-content,
+.browser-content,
+.calculator__display,
+.mine-count,
+.mine-face,
+.mine-timer {
+    background: var(--color-white);
+    border-top: 1px solid var(--color-surface-dark);
+    border-left: 1px solid var(--color-surface-dark);
+    border-right: 1px solid var(--color-white);
+    border-bottom: 1px solid var(--color-white);
+    box-shadow: inset 1px 1px 0 var(--color-black), inset -1px -1px 0 var(--color-surface-light);
+}
+
+.is-pressed,
+.start-button.is-open,
+.taskbar-button.is-active,
+.toolbar-button:active,
+.win-button:active,
+.window-control:active,
+.tray-button:active,
+.clock-button:active {
+    border-top: 1px solid var(--color-black);
+    border-left: 1px solid var(--color-black);
+    border-right: 1px solid var(--color-white);
+    border-bottom: 1px solid var(--color-white);
+    box-shadow: inset 1px 1px 0 var(--color-surface-dark), inset -1px -1px 0 var(--color-surface-light);
+}
+
+.win-button,
+.toolbar-button,
+.taskbar-button,
+.window-control,
+.tray-button,
+.clock-button {
+    min-height: 23px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 0;
+    outline: none;
+    cursor: default;
+}
+
+.win-button:focus-visible,
+.toolbar-button:focus-visible,
+.taskbar-button:focus-visible,
+.start-item:focus-visible,
+.desktop-icon:focus-visible,
+.window-control:focus-visible {
+    outline: 1px dotted var(--color-black);
+    outline-offset: -4px;
+}
+
+.field {
+    width: 100%;
+    padding: 2px 4px;
+    border-radius: 0;
+    outline: none;
+}
+
+.field--classic {
+    height: 22px;
+}
+
+.menu-divider,
+.toolbar-separator {
+    flex: 0 0 auto;
+    width: 2px;
+    margin: 1px 4px;
+    background: linear-gradient(to right, var(--color-surface-dark) 0, var(--color-surface-dark) 1px, var(--color-white) 1px, var(--color-white) 2px);
+}
+
+.status-bar {
+    display: flex;
+    min-height: 20px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-surface-dark);
+    padding: 2px;
+    gap: 2px;
+}
+
+.status-field {
+    flex: 1 1 auto;
+    min-height: 16px;
+    padding: 1px 5px;
+    background: var(--color-surface);
+}
+
+/* ==========================================================================
+   03. Layout Shell
+   ========================================================================== */
+
+.os-shell {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.desktop {
+    position: absolute;
+    inset: 0 0 var(--taskbar-height) 0;
+    background: var(--color-desktop);
+    outline: none;
+}
+
+.desktop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 22%, rgba(255, 255, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 80% 14%, rgba(255, 255, 255, 0.06), transparent 26%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.04), transparent 24%);
+    pointer-events: none;
+}
+
+.windows-container,
+.modal-container {
+    position: absolute;
+    inset: 0 0 var(--taskbar-height) 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.windows-container > *,
+.modal-container > * {
+    pointer-events: auto;
+}
+
+.selection-rectangle {
+    position: absolute;
+    border: 1px dotted rgba(255, 255, 255, 0.92);
+    background: rgba(10, 36, 106, 0.28);
+    z-index: 5;
+}
+
+/* ==========================================================================
+   04. Desktop Icons
+   ========================================================================== */
+
+.desktop-icon {
+    position: absolute;
+    width: var(--desktop-icon-width);
+    min-height: var(--desktop-icon-height);
+    padding: 4px 4px 2px;
+    border: 1px solid transparent;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    outline: none;
+    cursor: default;
+}
+
+.desktop-icon__visual {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.desktop-icon__label {
+    max-width: 100%;
+    padding: 1px 3px 2px;
+    color: var(--color-white);
+    text-align: center;
+    line-height: 1.18;
+    word-break: break-word;
+    border: 1px dotted transparent;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.desktop-icon.is-selected .desktop-icon__label,
+.desktop-icon:focus-visible .desktop-icon__label {
+    background: var(--color-selection);
+    border-color: var(--color-white);
+    text-shadow: none;
+}
+
+.desktop-icon.is-selected .desktop-icon__visual,
+.desktop-icon:focus-visible .desktop-icon__visual {
+    filter: sepia(0.45) saturate(1.6) hue-rotate(168deg);
+}
+
+/* ==========================================================================
+   05. Taskbar, Clock And System Tray
+   ========================================================================== */
+
+.taskbar {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: var(--taskbar-height);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    box-shadow: inset 0 1px 0 var(--color-surface-light);
+    z-index: 900;
+}
+
+.start-button {
+    min-width: 78px;
+    height: calc(var(--taskbar-height) - 4px);
+    padding: 0 7px 0 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    font-weight: 700;
+}
+
+.start-button.is-open {
+    padding-top: 1px;
+    padding-left: 6px;
+}
+
+.start-button__label {
+    letter-spacing: 0.1px;
+}
+
+.taskbar__divider {
+    width: 2px;
+    align-self: stretch;
+    margin: 0 1px;
+    background: linear-gradient(to right, var(--color-surface-dark) 0, var(--color-surface-dark) 1px, var(--color-white) 1px, var(--color-white) 2px);
+}
+
+.taskbar__tasks {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    min-width: 0;
+    height: 100%;
+}
+
+.taskbar-button {
+    flex: 0 1 160px;
+    min-width: 120px;
+    max-width: 180px;
+    height: 100%;
+    padding: 0 6px;
+    justify-content: flex-start;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.taskbar-button.is-active {
+    background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.32) 1px, transparent 1px, transparent 2px);
+    font-weight: 700;
+}
+
+.system-tray {
+    height: calc(var(--taskbar-height) - 6px);
+    padding: 1px 4px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--color-surface);
+}
+
+.tray-button,
+.clock-button {
+    min-width: 18px;
+    height: 20px;
+    padding: 0 3px;
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+}
+
+.tray-button:hover,
+.clock-button:hover {
+    border-top-color: var(--color-white);
+    border-left-color: var(--color-white);
+    border-right-color: var(--color-surface-dark);
+    border-bottom-color: var(--color-surface-dark);
+}
+
+.clock-button {
+    min-width: 54px;
+    margin-left: 2px;
+}
+
+.clock {
+    display: block;
+    min-width: 48px;
+    text-align: center;
+}
+
+.tray-icon {
+    position: relative;
+    width: 16px;
+    height: 16px;
+}
+
+.tray-icon--volume::before,
+.tray-icon--volume::after,
+.tray-icon--network::before,
+.tray-icon--network::after,
+.tray-icon--printer::before,
+.tray-icon--printer::after {
+    content: "";
+    position: absolute;
+}
+
+.tray-icon--volume::before {
+    left: 1px;
+    top: 5px;
+    width: 4px;
+    height: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+}
+
+.tray-icon--volume::after {
+    left: 7px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border-right: 2px solid var(--color-black);
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    border-radius: 0 10px 10px 0;
+}
+
+.tray-icon--network::before {
+    left: 1px;
+    top: 2px;
+    width: 10px;
+    height: 7px;
+    background: var(--color-desktop);
+    border: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 #25d7d7;
+}
+
+.tray-icon--network::after {
+    right: 0;
+    bottom: 1px;
+    width: 7px;
+    height: 5px;
+    background: var(--color-desktop);
+    border: 1px solid var(--color-black);
+}
+
+.tray-icon--printer::before {
+    left: 2px;
+    top: 1px;
+    width: 10px;
+    height: 4px;
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+}
+
+.tray-icon--printer::after {
+    left: 1px;
+    top: 5px;
+    width: 12px;
+    height: 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    box-shadow: inset 0 -3px 0 var(--color-white);
+}
+
+/* ==========================================================================
+   06. Menus, Start Menu And Context Menus
+   ========================================================================== */
+
+.context-menu,
+.submenu,
+.start-menu {
+    padding: 2px;
+    background: var(--color-surface);
+}
+
+.context-menu {
+    position: absolute;
+    min-width: 168px;
+    z-index: 1400;
+}
+
+.start-menu {
+    position: absolute;
+    left: 2px;
+    bottom: var(--taskbar-height);
+    display: flex;
+    min-width: 210px;
+    z-index: 1200;
+}
+
+.start-menu__sidebar {
+    position: relative;
+    width: 26px;
+    background: linear-gradient(180deg, var(--color-blue) 0%, var(--color-blue-light) 100%);
+    color: var(--color-white);
+}
+
+.start-menu__sidebar span {
+    position: absolute;
+    left: 3px;
+    bottom: 7px;
+    transform: rotate(-90deg);
+    transform-origin: left bottom;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.start-menu__items,
+.submenu {
+    display: flex;
+    flex-direction: column;
+    min-width: 188px;
+}
+
+.submenu {
+    position: absolute;
+    top: -3px;
+    left: calc(100% - 4px);
+    display: none;
+    z-index: 1210;
+}
+
+.start-item {
+    position: relative;
+    min-height: var(--menu-item-height);
+    padding: 3px 10px 3px 4px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    white-space: nowrap;
+    outline: none;
+}
+
+.start-item__label {
+    flex: 1 1 auto;
+}
+
+.start-item__arrow {
+    margin-left: 8px;
+    font-size: 8px;
+}
+
+.start-item:hover,
+.start-item.is-focused,
+.start-item.is-open {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.start-item.is-disabled {
+    color: var(--color-surface-dark);
+    text-shadow: 1px 1px 0 var(--color-white);
+}
+
+.start-item.is-disabled:hover,
+.start-item.is-disabled.is-focused {
+    background: transparent;
+    color: var(--color-surface-dark);
+}
+
+.start-item.is-open > .submenu {
+    display: flex;
+}
+
+.context-menu__item,
+.menu-bar__item,
+.menu-dropdown__item {
+    min-height: 20px;
+    padding: 3px 24px 3px 22px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    white-space: nowrap;
+}
+
+.context-menu__item:hover,
+.menu-dropdown__item:hover {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.context-menu__item.is-disabled,
+.menu-dropdown__item.is-disabled {
+    color: var(--color-surface-dark);
+}
+
+.context-menu__item.is-disabled:hover,
+.menu-dropdown__item.is-disabled:hover {
+    background: transparent;
+    color: var(--color-surface-dark);
+}
+
+/* ==========================================================================
+   07. Window Chrome And Dialogs
+   ========================================================================== */
+
+.window {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    min-height: 140px;
+    padding: 3px;
+    background: var(--color-surface);
+    z-index: 40;
+}
+
+.window.minimized {
+    display: none !important;
+}
+
+.window.focused {
+    z-index: 200;
+}
+
+.window-titlebar,
+.window-titlebar--active {
+    height: var(--titlebar-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 2px 2px 2px 4px;
+    background: linear-gradient(90deg, var(--color-surface-dark), #9a9a9a);
+    color: var(--color-surface);
+    font-weight: 700;
+}
+
+.window.focused .window-titlebar,
+.window-titlebar--active {
+    background: linear-gradient(90deg, var(--color-blue), var(--color-blue-light));
+    color: var(--color-white);
+}
+
+.window-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.window-title__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.window-controls {
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.window-control {
+    width: 16px;
+    height: 14px;
+    min-height: 14px;
+    padding: 0;
+    font-weight: 700;
+}
+
+.window-control__glyph {
+    position: relative;
+    display: block;
+    width: 8px;
+    height: 8px;
+}
+
+.window-control__glyph--max {
+    border: 1px solid var(--color-black);
+    border-top-width: 2px;
+}
+
+.window-control__glyph--restore {
+    border: 1px solid var(--color-black);
+    border-top-width: 2px;
+}
+
+.window-control__glyph--restore::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 6px;
+    height: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    border-top-width: 2px;
+}
+
+.window-menu {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-height: 21px;
+    padding: 0 2px;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-white);
+    box-shadow: inset 0 -1px 0 var(--color-surface-dark);
+}
+
+.menu-bar__item {
+    min-height: 19px;
+    padding: 2px 7px;
+}
+
+.menu-bar__item.is-open,
+.menu-bar__item:hover {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.menu-dropdown {
+    position: absolute;
+    top: 100%;
+    left: -1px;
+    min-width: 150px;
+    padding: 2px;
+    background: var(--color-surface);
+    z-index: 10;
+}
+
+.window-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    min-height: 28px;
+    padding: 3px 4px 4px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    border-bottom: 1px solid var(--color-surface-dark);
+}
+
+.window-toolbar__handle {
+    width: 4px;
+    align-self: stretch;
+    background:
+        linear-gradient(180deg, transparent 0 1px, var(--color-white) 1px 2px, transparent 2px 3px),
+        linear-gradient(180deg, transparent 0 1px, var(--color-surface-dark) 1px 2px, transparent 2px 3px);
+    background-size: 100% 4px;
+}
+
+.window-content {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.window-resizer {
+    position: absolute;
+    z-index: 3;
+}
+
+.window-resizer[data-edge="top"],
+.window-resizer[data-edge="bottom"] {
+    left: 0;
+    width: 100%;
+    height: 5px;
+}
+
+.window-resizer[data-edge="top"] {
+    top: -2px;
+    cursor: n-resize;
+}
+
+.window-resizer[data-edge="bottom"] {
+    bottom: -2px;
+    cursor: s-resize;
+}
+
+.window-resizer[data-edge="left"],
+.window-resizer[data-edge="right"] {
+    top: 0;
+    width: 5px;
+    height: 100%;
+}
+
+.window-resizer[data-edge="left"] {
+    left: -2px;
+    cursor: w-resize;
+}
+
+.window-resizer[data-edge="right"] {
+    right: -2px;
+    cursor: e-resize;
+}
+
+.window-resizer[data-edge="top-left"],
+.window-resizer[data-edge="top-right"],
+.window-resizer[data-edge="bottom-left"],
+.window-resizer[data-edge="bottom-right"] {
+    width: 8px;
+    height: 8px;
+}
+
+.window-resizer[data-edge="top-left"] {
+    top: -2px;
+    left: -2px;
+    cursor: nw-resize;
+}
+
+.window-resizer[data-edge="top-right"] {
+    top: -2px;
+    right: -2px;
+    cursor: ne-resize;
+}
+
+.window-resizer[data-edge="bottom-left"] {
+    left: -2px;
+    bottom: -2px;
+    cursor: sw-resize;
+}
+
+.window-resizer[data-edge="bottom-right"] {
+    right: -2px;
+    bottom: -2px;
+    cursor: se-resize;
+}
+
+.window-ghost {
+    position: absolute;
+    border: 2px dashed var(--color-black);
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    z-index: 1500;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1600;
+    background: transparent;
+}
+
+.dialog {
+    width: min(360px, calc(100vw - 40px));
+    padding: 3px;
+    background: var(--color-surface);
+}
+
+.dialog__body {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    background: var(--color-surface);
+}
+
+.dialog__copy {
+    flex: 1 1 auto;
+    line-height: 1.35;
+}
+
+.dialog__actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px 14px;
+}
+
+.dialog-icon {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+}
+
+.dialog-icon--error {
+    border-radius: 50%;
+    background: var(--color-error);
+    border: 2px solid var(--color-white);
+    box-shadow: 0 0 0 1px var(--color-black);
+}
+
+.dialog-icon--error::before,
+.dialog-icon--error::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 13px;
+    width: 16px;
+    height: 4px;
+    background: var(--color-white);
+}
+
+.dialog-icon--error::before {
+    transform: rotate(45deg);
+}
+
+.dialog-icon--error::after {
+    transform: rotate(-45deg);
+}
+
+.dialog-icon--info {
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 2px solid var(--color-blue);
+    box-shadow: 0 0 0 1px var(--color-black);
+}
+
+.dialog-icon--info::before {
+    content: "i";
+    position: absolute;
+    inset: 2px 0 0;
+    text-align: center;
+    font: 700 24px/28px "Times New Roman", serif;
+    color: var(--color-blue);
+}
+
+.dialog-icon--warn {
+    width: 0;
+    height: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 28px solid var(--color-warning);
+    filter: drop-shadow(0 0 0 var(--color-black)) drop-shadow(1px 1px 0 var(--color-black));
+}
+
+.dialog-icon--warn::before {
+    content: "!";
+    position: absolute;
+    top: 4px;
+    left: -2px;
+    font: 700 20px/1 Arial, sans-serif;
+}
+
+/* ==========================================================================
+   08. Overlays: Boot, Login, Calendar, Balloon, Tooltip
+   ========================================================================== */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.overlay--boot {
+    background: #000000;
+    color: var(--color-white);
+    flex-direction: column;
+    gap: 30px;
+}
+
+.boot-brand {
+    text-align: center;
+}
+
+.boot-brand__microsoft {
+    font: italic 900 70px/0.9 Arial, sans-serif;
+}
+
+.boot-brand__windows {
+    font: 900 82px/0.92 Arial, sans-serif;
+    letter-spacing: -2px;
+}
+
+.boot-brand sup {
+    font-size: 0.28em;
+    vertical-align: super;
+}
+
+.boot-progress {
+    position: relative;
+    width: 300px;
+    height: 18px;
+    background: #000000;
+    overflow: hidden;
+}
+
+.boot-progress__bar {
+    position: absolute;
+    top: 0;
+    left: -64px;
+    width: 64px;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-blue), var(--color-blue-light), var(--color-blue));
+    animation: boot-progress 1.55s linear infinite;
+}
+
+@keyframes boot-progress {
+    from { left: -64px; }
+    to { left: 300px; }
+}
+
+.overlay--login {
+    background: var(--color-desktop);
+}
+
+.login-dialog {
+    width: 410px;
+}
+
+.login-dialog__body {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: var(--color-surface);
+}
+
+.login-dialog__brand {
+    width: 68px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 16px;
+}
+
+.login-dialog__form {
+    flex: 1 1 auto;
+}
+
+.login-dialog__copy {
+    margin: 0 0 14px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.form-row > span {
+    width: 74px;
+}
+
+.login-dialog__actions {
+    width: 74px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.overlay--screensaver {
+    background: #000000;
+    z-index: 1900;
+}
+
+.calendar-panel {
+    position: absolute;
+    right: 2px;
+    bottom: var(--taskbar-height);
+    width: 196px;
+    padding: 4px;
+    background: var(--color-surface);
+    z-index: 1250;
+}
+
+.calendar-panel__header {
+    padding: 3px;
+    margin-bottom: 4px;
+    font-weight: 700;
+    color: var(--color-white);
+    text-align: center;
+    background: linear-gradient(90deg, var(--color-blue), var(--color-blue-light));
+}
+
+.calendar-panel__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+}
+
+.calendar-panel__grid div {
+    min-height: 20px;
+    padding-top: 3px;
+    text-align: center;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-surface-dark);
+    border-left: 1px solid var(--color-surface-dark);
+    border-right: 1px solid var(--color-white);
+    border-bottom: 1px solid var(--color-white);
+}
+
+.calendar-panel__grid .is-today {
+    background: var(--color-selection);
+    color: var(--color-white);
+    font-weight: 700;
+}
+
+.balloon {
+    position: absolute;
+    right: 16px;
+    bottom: calc(var(--taskbar-height) + 8px);
+    width: 228px;
+    padding: 9px 12px 10px;
+    background: var(--color-tooltip);
+    border: 1px solid var(--color-black);
+    border-radius: 6px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+    z-index: 1260;
+}
+
+.balloon::after {
+    content: "";
+    position: absolute;
+    right: 20px;
+    bottom: -8px;
+    border-top: 8px solid var(--color-tooltip);
+    border-left: 8px solid transparent;
+    filter: drop-shadow(0 1px 0 var(--color-black));
+}
+
+.balloon__close {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    min-width: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.balloon__title {
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 1700;
+    max-width: 220px;
+    padding: 3px 6px;
+    background: var(--color-tooltip);
+    border: 1px solid var(--color-black);
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   09. Shared App Chrome
+   ========================================================================== */
+
+.app-frame {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 28px;
+    padding: 3px 4px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    border-bottom: 1px solid var(--color-surface-dark);
+}
+
+.toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.toolbar-button {
+    min-width: 28px;
+    min-height: 22px;
+    padding: 0 6px;
+}
+
+.toolbar-button--icon {
+    padding: 0;
+    width: 26px;
+}
+
+.toolbar-label {
+    margin-right: 2px;
+}
+
+.toolbar-address {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.toolbar-address__input,
+.browser-address__input {
+    height: 22px;
+    padding: 2px 4px;
+    outline: none;
+}
+
+.app-toolbar-icon {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
+.app-toolbar-icon--back::before,
+.app-toolbar-icon--forward::before,
+.app-toolbar-icon--up::before,
+.app-toolbar-icon--refresh::before,
+.app-toolbar-icon--home::before,
+.app-toolbar-icon--stop::before,
+.app-toolbar-icon--view::before {
+    content: "";
+    position: absolute;
+}
+
+.app-toolbar-icon--back::before {
+    left: 2px;
+    top: 3px;
+    width: 10px;
+    height: 10px;
+    border-left: 3px solid var(--color-black);
+    border-bottom: 3px solid var(--color-black);
+    transform: rotate(45deg);
+}
+
+.app-toolbar-icon--forward::before {
+    right: 2px;
+    top: 3px;
+    width: 10px;
+    height: 10px;
+    border-right: 3px solid var(--color-black);
+    border-top: 3px solid var(--color-black);
+    transform: rotate(45deg);
+}
+
+.app-toolbar-icon--up::before {
+    left: 4px;
+    top: 2px;
+    width: 8px;
+    height: 8px;
+    border-left: 3px solid var(--color-black);
+    border-top: 3px solid var(--color-black);
+    transform: rotate(45deg);
+}
+
+.app-toolbar-icon--refresh::before {
+    inset: 2px;
+    border: 2px solid var(--color-black);
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+.app-toolbar-icon--refresh::after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    right: 2px;
+    border-left: 4px solid var(--color-black);
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+}
+
+.app-toolbar-icon--home::before {
+    left: 3px;
+    bottom: 2px;
+    width: 10px;
+    height: 8px;
+    border: 2px solid var(--color-black);
+    background: var(--color-white);
+}
+
+.app-toolbar-icon--home::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 8px solid var(--color-black);
+}
+
+.app-toolbar-icon--stop::before,
+.app-toolbar-icon--view::before {
+    inset: 2px;
+    border: 2px solid var(--color-black);
+}
+
+.app-toolbar-icon--stop::before {
+    background: #cc0000;
+}
+
+.app-toolbar-icon--view::before {
+    background:
+        linear-gradient(90deg, var(--color-black) 0 1px, transparent 1px 5px, var(--color-black) 5px 6px, transparent 6px 10px, var(--color-black) 10px 11px),
+        linear-gradient(180deg, var(--color-black) 0 1px, transparent 1px 5px, var(--color-black) 5px 6px, transparent 6px 10px, var(--color-black) 10px 11px);
+}
+
+/* ==========================================================================
+   10. Explorer And Folder Views
+   ========================================================================== */
+
+.explorer {
+    background: var(--color-surface);
+}
+
+.explorer-content {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 8px;
+    overflow: auto;
+    background: var(--color-white);
+}
+
+.explorer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 10px;
+}
+
+.explorer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.explorer-list__header,
+.explorer-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 1.5fr) minmax(80px, 0.6fr) minmax(90px, 0.75fr) minmax(150px, 1fr);
+    align-items: center;
+}
+
+.explorer-list__header {
+    min-height: 22px;
+    padding: 0 6px;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-surface-dark);
+    font-weight: 700;
+}
+
+.explorer-row {
+    min-height: 20px;
+    padding: 0 6px;
+}
+
+.explorer-row.is-selected,
+.explorer-row:hover {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.shell-item {
+    width: 78px;
+    padding: 6px 4px 4px;
+    border: 1px solid transparent;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: default;
+}
+
+.shell-item__name {
+    width: 100%;
+    text-align: center;
+    line-height: 1.18;
+    word-break: break-word;
+}
+
+.shell-item.is-selected .shell-item__name,
+.shell-item:focus-visible .shell-item__name,
+.shell-item:hover .shell-item__name {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.shell-item.is-selected .desktop-icon__visual,
+.shell-item:focus-visible .desktop-icon__visual,
+.explorer-row.is-selected .desktop-icon__visual {
+    filter: sepia(0.45) saturate(1.6) hue-rotate(168deg);
+}
+
+.explorer-empty {
+    padding: 14px;
+    color: var(--color-surface-dark);
+}
+
+.drive-meter {
+    margin-top: 2px;
+    width: 54px;
+    height: 6px;
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+}
+
+.drive-meter__fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00a500, #2dbb2d);
+}
+
+/* ==========================================================================
+   11. Browser And Internet Explorer
+   ========================================================================== */
+
+.browser {
+    background: var(--color-surface);
+}
+
+.browser-toolbar__cluster {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.browser-content {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: 10px 12px;
+    background: #ffffff;
+    color: #000000;
+}
+
+.browser-content a {
+    color: #0000ee;
+    text-decoration: underline;
+}
+
+.browser-status {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    min-height: 20px;
+    padding: 2px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-surface-dark);
+}
+
+.browser-progress {
+    position: relative;
+    width: 120px;
+    overflow: hidden;
+}
+
+.browser-progress__bar {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    bottom: 1px;
+    width: 0;
+    background: linear-gradient(90deg, #1c65c2, #72c7ff);
+}
+
+.web-page {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.web-page__hero {
+    padding: 16px;
+    margin-bottom: 14px;
+    background: linear-gradient(180deg, #ffffff, #d5e7ff);
+    border: 1px solid #7a9fd6;
+}
+
+.web-page__tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.web-card {
+    padding: 10px;
+    border: 1px solid #7f9db9;
+    background: #f2f6fb;
+}
+
+.retro-banner {
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    color: #ffffff;
+    background: linear-gradient(90deg, #103982, #3e76c2);
+}
+
+.geocities-page {
+    background:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 0, 0.18), transparent 18%),
+        linear-gradient(180deg, #fff7cc, #ffd9ff);
+    border: 2px dashed #ff00ff;
+    padding: 14px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.chat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: "Courier New", monospace;
+}
+
+.chat-log span:nth-child(odd) {
+    color: #0d3d91;
+}
+
+/* ==========================================================================
+   12. Notepad
+   ========================================================================== */
+
+.notepad {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.notepad__editor {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 6px;
+    border: none;
+    resize: none;
+    font: 13px/1.35 "Courier New", monospace;
+    white-space: pre;
+    outline: none;
+}
+
+.notepad__editor.is-wrap {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.notepad__status {
+    min-height: 20px;
+}
+
+/* ==========================================================================
+   13. Paint
+   ========================================================================== */
+
+.paint {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.paint__main {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.paint__tools {
+    width: 48px;
+    padding: 3px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 21px;
+    gap: 2px;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-white);
+    box-shadow: inset -1px 0 0 var(--color-surface-dark);
+}
+
+.paint__tool {
+    min-height: 21px;
+    padding: 0;
+    font-size: 11px;
+}
+
+.paint__workspace {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 7px;
+    overflow: auto;
+    background: var(--color-surface-dark);
+}
+
+.paint__canvas-frame {
+    position: relative;
+    display: inline-block;
+    background: var(--color-white);
+}
+
+.paint__canvas {
+    display: block;
+    background: #ffffff;
+    image-rendering: pixelated;
+    cursor: crosshair;
+}
+
+.paint__selection {
+    position: absolute;
+    border: 1px dashed var(--color-black);
+    pointer-events: none;
+}
+
+.paint__footer {
+    min-height: 44px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    box-shadow: inset 0 1px 0 var(--color-surface-dark);
+}
+
+.paint__current-color {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+}
+
+.paint__palette {
+    display: grid;
+    grid-template-columns: repeat(8, 14px);
+    gap: 2px;
+}
+
+.paint__swatch {
+    width: 14px;
+    height: 14px;
+    border-top: 1px solid var(--color-surface-dark);
+    border-left: 1px solid var(--color-surface-dark);
+    border-right: 1px solid var(--color-white);
+    border-bottom: 1px solid var(--color-white);
+}
+
+.paint__size {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.paint__size .field {
+    width: 50px;
+}
+
+/* ==========================================================================
+   14. Calculator
+   ========================================================================== */
+
+.calculator {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 8px;
+    gap: 8px;
+    background: var(--color-surface);
+}
+
+.calculator__display {
+    min-height: 34px;
+    padding: 5px 6px 3px;
+    text-align: right;
+    font: 700 18px/1 Tahoma, sans-serif;
+    background: var(--color-white);
+}
+
+.calculator__body {
+    display: flex;
+    gap: 10px;
+    flex: 1 1 auto;
+}
+
+.calculator__memory {
+    width: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calculator__grid {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+.calculator__button {
+    min-height: 24px;
+}
+
+.calculator__button--blue {
+    color: #0000aa;
+}
+
+.calculator__button--red {
+    color: #aa0000;
+}
+
+/* ==========================================================================
+   15. Command Prompt
+   ========================================================================== */
+
+.cmd {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--color-surface);
+}
+
+.cmd__screen {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 6px;
+    overflow: auto;
+    background: #000000;
+    color: #c0c0c0;
+    font: 13px/1.35 "Courier New", monospace;
+}
+
+.cmd__line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.cmd__prompt {
+    margin-right: 2px;
+    white-space: pre;
+}
+
+.cmd__input {
+    flex: 1 1 auto;
+    min-width: 10px;
+    outline: none;
+}
+
+.cmd__cursor {
+    display: inline-block;
+    width: 7px;
+    height: 13px;
+    background: #c0c0c0;
+    vertical-align: text-bottom;
+}
+
+/* ==========================================================================
+   16. Control Panel, Run Dialog, About And Help
+   ========================================================================== */
+
+.control-panel {
+    height: 100%;
+    padding: 10px;
+    background: var(--color-white);
+}
+
+.control-panel__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+    gap: 14px 18px;
+}
+
+.control-item {
+    padding: 6px 4px;
+    border: 1px solid transparent;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    cursor: default;
+}
+
+.control-item__label {
+    color: var(--color-black);
+}
+
+.control-item:hover,
+.control-item:focus-visible {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.control-item:hover .control-item__label,
+.control-item:focus-visible .control-item__label {
+    color: var(--color-white);
+}
+
+.control-item:hover .desktop-icon__visual,
+.control-item:focus-visible .desktop-icon__visual {
+    filter: sepia(0.45) saturate(1.6) hue-rotate(168deg);
+}
+
+.settings-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    padding: 10px;
+    background: var(--color-surface);
+}
+
+.settings-panel__preview {
+    min-height: 150px;
+    padding: 12px;
+    background: var(--color-white);
+}
+
+.list-box {
+    min-height: 110px;
+    padding: 2px;
+    background: var(--color-white);
+}
+
+.list-box__item {
+    padding: 3px 5px;
+}
+
+.list-box__item.is-selected {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.range-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-row input[type="range"] {
+    flex: 1 1 auto;
+}
+
+/* ==========================================================================
+   17. Minesweeper And Solitaire
+   ========================================================================== */
+
+.minesweeper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    padding: 8px;
+    background: var(--color-surface);
+}
+
+.minesweeper__hud {
+    min-height: 48px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.mine-count,
+.mine-face,
+.mine-timer {
+    min-width: 52px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+    color: #ff0000;
+    font: 700 22px/1 "Courier New", monospace;
+}
+
+.mine-face {
+    min-width: 30px;
+    min-height: 30px;
+    padding: 0;
+    background: var(--color-surface);
+    color: var(--color-black);
+}
+
+.minesweeper__board {
+    display: grid;
+    gap: 0;
+    align-content: flex-start;
+    justify-content: flex-start;
+}
+
+.mine-cell {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    border-left: 1px solid var(--color-white);
+    border-right: 1px solid var(--color-surface-dark);
+    border-bottom: 1px solid var(--color-surface-dark);
+    box-shadow: inset 1px 1px 0 var(--color-surface-light);
+    font: 700 12px/1 Arial, sans-serif;
+}
+
+.mine-cell.is-open {
+    border: 1px solid var(--color-surface-dark);
+    box-shadow: none;
+    background: #c9c9c9;
+}
+
+.mine-cell.is-open[data-count="1"] { color: #0000ff; }
+.mine-cell.is-open[data-count="2"] { color: #008000; }
+.mine-cell.is-open[data-count="3"] { color: #ff0000; }
+.mine-cell.is-open[data-count="4"] { color: #000080; }
+.mine-cell.is-open[data-count="5"] { color: #800000; }
+.mine-cell.is-open[data-count="6"] { color: #008080; }
+.mine-cell.is-open[data-count="7"] { color: #000000; }
+.mine-cell.is-open[data-count="8"] { color: #808080; }
+
+.solitaire-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 25% 30%, rgba(255, 255, 255, 0.08), transparent 18%),
+        linear-gradient(180deg, #147f44, var(--color-felt));
+    color: #ffffff;
+}
+
+.solitaire-card {
+    width: 66px;
+    height: 88px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #ffffff, #ededed);
+    box-shadow: 0 0 0 1px var(--color-black), 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================================================
+   18. Icon Library
+   ========================================================================== */
+
+.sm-icon {
+    width: 18px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 7px;
+    flex: 0 0 auto;
+}
+
+.icon {
+    position: relative;
+    display: block;
+    flex: 0 0 auto;
+}
+
+.icon-win-logo {
+    width: 14px;
+    height: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1px;
+    transform: skewY(-9deg) rotate(-5deg);
+}
+
+.icon-win-logo--large {
+    width: 30px;
+    height: 30px;
+    transform: skewY(-9deg) rotate(-5deg) scale(1.85);
+}
+
+.icon-win-logo--screensaver {
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    transform: skewY(-9deg) rotate(-5deg) scale(3.2);
+}
+
+.win-logo__panel {
+    border: 1px solid rgba(0, 0, 0, 0.34);
+}
+
+.win-logo__panel--red { background: #e34234; }
+.win-logo__panel--blue { background: #2586f2; }
+.win-logo__panel--green { background: #16a933; }
+.win-logo__panel--yellow { background: #ffcc00; }
+
+.icon-folder-small,
+.icon-doc-small,
+.icon-run-small,
+.icon-calc-small,
+.icon-programs-small,
+.icon-settings-small,
+.icon-control-small,
+.icon-display-small,
+.icon-clock-small,
+.icon-find-small,
+.icon-paint-small,
+.icon-ie-small,
+.icon-dos-small,
+.icon-mine-small,
+.icon-cards-small,
+.icon-shutdown-small {
+    width: 16px;
+    height: 16px;
+}
+
+.icon-folder-small::before {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 4px;
+    width: 13px;
+    height: 9px;
+    background: #e2c64f;
+    border: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 #fbf1b2;
+}
+
+.icon-folder-small::after {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 2px;
+    width: 6px;
+    height: 3px;
+    background: #e2c64f;
+    border: 1px solid var(--color-black);
+    border-bottom: none;
+}
+
+.icon-doc-small {
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+}
+
+.icon-doc-small::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    border-width: 4px;
+    border-style: solid;
+    border-color: var(--color-black) var(--color-black) transparent transparent;
+}
+
+.icon-doc-small::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 6px;
+    width: 9px;
+    height: 1px;
+    background: var(--color-surface-dark);
+    box-shadow: 0 2px 0 var(--color-surface-dark), 0 4px 0 var(--color-surface-dark);
+}
+
+.icon-run-small {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    border-left: 1px solid var(--color-white);
+    border-right: 1px solid var(--color-black);
+    border-bottom: 1px solid var(--color-black);
+}
+
+.icon-run-small::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 3px;
+    width: 5px;
+    height: 5px;
+    background: var(--color-warning);
+}
+
+.icon-run-small::after {
+    content: "";
+    position: absolute;
+    right: 2px;
+    top: 4px;
+    width: 5px;
+    height: 1px;
+    background: var(--color-black);
+    box-shadow: 0 2px 0 var(--color-black), 0 4px 0 var(--color-black);
+}
+
+.icon-calc-small {
+    background: #8f8f8f;
+    border: 1px solid var(--color-black);
+}
+
+.icon-calc-small::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    height: 4px;
+    background: #dff4df;
+    border: 1px solid var(--color-black);
+}
+
+.icon-calc-small::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 9px;
+    width: 10px;
+    height: 5px;
+    background:
+        linear-gradient(90deg, var(--color-black) 0 1px, transparent 1px 4px, var(--color-black) 4px 5px, transparent 5px 8px, var(--color-black) 8px 9px),
+        linear-gradient(180deg, var(--color-black) 0 1px, transparent 1px 3px, var(--color-black) 3px 4px);
+}
+
+.icon-programs-small {
+    background: #7e7e7e;
+    border: 1px solid var(--color-black);
+    border-top-color: var(--color-white);
+    border-left-color: var(--color-white);
+}
+
+.icon-programs-small::before {
+    content: "";
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    width: 7px;
+    height: 4px;
+    background: var(--color-desktop);
+    border: 1px solid var(--color-white);
+}
+
+.icon-settings-small {
+    border-radius: 2px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+}
+
+.icon-settings-small::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 2px dotted var(--color-surface-dark);
+    background: var(--color-white);
+}
+
+.icon-control-small::before,
+.icon-display-small::before,
+.icon-clock-small::before,
+.icon-find-small::before,
+.icon-paint-small::before,
+.icon-ie-small::before,
+.icon-dos-small::before,
+.icon-mine-small::before,
+.icon-cards-small::before,
+.icon-shutdown-small::before {
+    content: "";
+    position: absolute;
+}
+
+.icon-control-small::before {
+    inset: 2px;
+    background: linear-gradient(90deg, #ffd66f 0 49%, #c0c0c0 49% 100%);
+    border: 1px solid var(--color-black);
+}
+
+.icon-display-small::before {
+    left: 1px;
+    top: 2px;
+    width: 13px;
+    height: 8px;
+    background: var(--color-desktop);
+    border: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 #25d7d7;
+}
+
+.icon-display-small::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    bottom: 2px;
+    width: 6px;
+    height: 3px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+}
+
+.icon-clock-small::before {
+    left: 2px;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+}
+
+.icon-clock-small::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    width: 1px;
+    height: 5px;
+    background: var(--color-black);
+    box-shadow: -3px 4px 0 0 var(--color-black);
+    transform-origin: bottom center;
+    transform: rotate(45deg);
+}
+
+.icon-find-small::before {
+    left: 1px;
+    top: 1px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 2px solid var(--color-black);
+    background: var(--color-white);
+}
+
+.icon-find-small::after {
+    content: "";
+    position: absolute;
+    right: 1px;
+    bottom: 2px;
+    width: 5px;
+    height: 2px;
+    background: var(--color-black);
+    transform: rotate(45deg);
+}
+
+.icon-paint-small::before {
+    left: 1px;
+    top: 2px;
+    width: 12px;
+    height: 8px;
+    background: linear-gradient(180deg, #f9e0bc, #d0a37a);
+    border-radius: 50% 50% 45% 45%;
+    border: 1px solid var(--color-black);
+}
+
+.icon-paint-small::after {
+    content: "";
+    position: absolute;
+    right: 1px;
+    bottom: 2px;
+    width: 4px;
+    height: 10px;
+    background: #8b5a2b;
+    transform: rotate(35deg);
+}
+
+.icon-ie-small::before {
+    content: "e";
+    inset: -1px 0 0 2px;
+    color: #1c7bd8;
+    font: 700 17px/1 "Times New Roman", serif;
+}
+
+.icon-ie-small::after {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 9px;
+    width: 13px;
+    height: 3px;
+    border: 1px solid #ffd400;
+    border-radius: 50%;
+    transform: rotate(-18deg);
+}
+
+.icon-dos-small {
+    background: #000000;
+    border: 1px solid var(--color-surface);
+    outline: 1px solid var(--color-black);
+}
+
+.icon-dos-small::before {
+    content: "C:>";
+    left: 1px;
+    top: 2px;
+    color: var(--color-surface);
+    font: 700 6px/1 "Courier New", monospace;
+}
+
+.icon-mine-small::before {
+    inset: 2px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 55% 45%, #7f7f7f 0 35%, #000000 36% 100%);
+}
+
+.icon-cards-small::before {
+    left: 2px;
+    top: 1px;
+    width: 8px;
+    height: 11px;
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+    box-shadow: 3px 3px 0 #cc0000, 3px 3px 0 1px var(--color-black);
+}
+
+.icon-shutdown-small::before {
+    left: 2px;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #e34234;
+    border: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 #ff9e97;
+}
+
+.icon-shutdown-small::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 2px;
+    height: 6px;
+    background: var(--color-white);
+}
+
+.icon-help-small {
+    width: 16px;
+    height: 16px;
+    color: var(--color-blue);
+    font: 700 14px/1 "Times New Roman", serif;
+    text-align: center;
+}
+
+.icon-computer-large,
+.icon-recycle-large,
+.icon-network-large,
+.icon-ie-large,
+.icon-documents-large,
+.icon-control-large,
+.icon-dos-large,
+.icon-drive-floppy-large,
+.icon-drive-disk-large,
+.icon-drive-cd-large,
+.icon-text-large,
+.icon-image-large,
+.icon-folder-large,
+.icon-bin-full-large {
+    width: 32px;
+    height: 32px;
+}
+
+.icon-computer-large::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 2px;
+    width: 24px;
+    height: 17px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    border-top-color: var(--color-white);
+    border-left-color: var(--color-white);
+    box-shadow: inset 2px 2px 0 #1dc6c6;
+}
+
+.icon-computer-large::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    bottom: 4px;
+    width: 28px;
+    height: 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    border-top-color: var(--color-white);
+    border-left-color: var(--color-white);
+}
+
+.icon-folder-large::before,
+.icon-documents-large::before,
+.icon-control-large::before {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 5px;
+    width: 14px;
+    height: 5px;
+    background: #e2c64f;
+    border: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 #fbf1b2;
+}
+
+.icon-folder-large::after,
+.icon-documents-large::after,
+.icon-control-large::after {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 9px;
+    width: 30px;
+    height: 20px;
+    background: #e2c64f;
+    border: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 #fbf1b2, inset -1px -1px 0 #b29a37;
+}
+
+.icon-documents-large span,
+.icon-control-large span {
+    position: absolute;
+    left: 7px;
+    top: 12px;
+    width: 18px;
+    height: 13px;
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+    z-index: 1;
+}
+
+.icon-control-large span::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 2px dotted var(--color-surface-dark);
+}
+
+.icon-documents-large span::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 4px;
+    width: 12px;
+    height: 1px;
+    background: var(--color-surface-dark);
+    box-shadow: 0 3px 0 var(--color-surface-dark), 0 6px 0 var(--color-surface-dark);
+}
+
+.icon-recycle-large::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    width: 20px;
+    height: 22px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 4px, rgba(0, 0, 0, 0.1) 4px 5px, transparent 5px 8px);
+    background-color: #f8fdff;
+    border: 1px solid var(--color-black);
+}
+
+.icon-recycle-large::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 24px;
+    height: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    border-radius: 2px;
+}
+
+.icon-bin-full-large::before,
+.icon-bin-full-large::after {
+    content: "";
+    position: absolute;
+}
+
+.icon-bin-full-large::before {
+    left: 6px;
+    top: 8px;
+    width: 20px;
+    height: 22px;
+    background:
+        radial-gradient(circle at 35% 34%, rgba(0, 140, 255, 0.35), transparent 24%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 4px, rgba(0, 0, 0, 0.1) 4px 5px, transparent 5px 8px);
+    background-color: #f8fdff;
+    border: 1px solid var(--color-black);
+}
+
+.icon-bin-full-large::after {
+    left: 4px;
+    top: 4px;
+    width: 24px;
+    height: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    border-radius: 2px;
+}
+
+.icon-network-large::before,
+.icon-network-large::after {
+    content: "";
+    position: absolute;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    border-top-color: var(--color-white);
+    border-left-color: var(--color-white);
+}
+
+.icon-network-large::before {
+    left: 12px;
+    top: 2px;
+    width: 18px;
+    height: 13px;
+    box-shadow: inset 2px 2px 0 #1dc6c6;
+}
+
+.icon-network-large::after {
+    left: 0;
+    top: 14px;
+    width: 18px;
+    height: 13px;
+    box-shadow: inset 2px 2px 0 #1dc6c6;
+}
+
+.icon-ie-large::before {
+    content: "e";
+    position: absolute;
+    inset: -2px 0 0 3px;
+    color: #1c7bd8;
+    text-shadow: 1px 1px 0 var(--color-black);
+    font: 700 38px/1 "Times New Roman", serif;
+}
+
+.icon-ie-large::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 13px;
+    width: 34px;
+    height: 8px;
+    border: 2px solid #ffd400;
+    border-radius: 50%;
+    transform: rotate(-18deg);
+}
+
+.icon-dos-large::before {
+    content: "";
+    position: absolute;
+    inset: 3px 2px 7px;
+    background: #000000;
+    border: 1px solid var(--color-surface);
+}
+
+.icon-dos-large::after {
+    content: "C:\\>";
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    color: var(--color-surface);
+    font: 700 9px/1 "Courier New", monospace;
+}
+
+.icon-drive-floppy-large::before,
+.icon-drive-disk-large::before,
+.icon-drive-cd-large::before,
+.icon-text-large::before,
+.icon-image-large::before {
+    content: "";
+    position: absolute;
+}
+
+.icon-drive-floppy-large::before {
+    left: 5px;
+    top: 3px;
+    width: 22px;
+    height: 24px;
+    background: #323232;
+    border: 1px solid var(--color-black);
+    box-shadow: inset 0 0 0 2px #4c4c4c;
+}
+
+.icon-drive-floppy-large::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    width: 12px;
+    height: 7px;
+    background: #d7d7ff;
+    border: 1px solid var(--color-black);
+}
+
+.icon-drive-disk-large::before {
+    left: 3px;
+    top: 11px;
+    width: 26px;
+    height: 13px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-black);
+    border-top-color: var(--color-white);
+    border-left-color: var(--color-white);
+}
+
+.icon-drive-disk-large::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    width: 18px;
+    height: 6px;
+    background: #84e2e2;
+    border: 1px solid var(--color-black);
+}
+
+.icon-drive-cd-large::before {
+    left: 6px;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffffff 0 18%, #d8f1ff 18% 38%, #9ad8ff 38% 68%, #dff6ff 68% 100%);
+    border: 1px solid var(--color-black);
+}
+
+.icon-drive-cd-large::after {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 11px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+}
+
+.icon-text-large::before {
+    left: 6px;
+    top: 2px;
+    width: 18px;
+    height: 25px;
+    background: var(--color-white);
+    border: 1px solid var(--color-black);
+}
+
+.icon-text-large::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 10px;
+    width: 12px;
+    height: 1px;
+    background: var(--color-surface-dark);
+    box-shadow: 0 3px 0 var(--color-surface-dark), 0 6px 0 var(--color-surface-dark), 0 9px 0 var(--color-surface-dark);
+}
+
+.icon-image-large::before {
+    left: 4px;
+    top: 6px;
+    width: 24px;
+    height: 18px;
+    background: linear-gradient(180deg, #dff8ff, #7fc3ff);
+    border: 1px solid var(--color-black);
+}
+
+.icon-image-large::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    bottom: 9px;
+    width: 18px;
+    height: 8px;
+    background: linear-gradient(135deg, transparent 0 30%, #1d8b3b 30% 65%, #0a5f5f 65% 100%);
+}
+
+/* ==========================================================================
+   19. Wallpapers
+   ========================================================================== */
+
+.wallpaper-teal {
+    background:
+        radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.08), transparent 22%),
+        radial-gradient(circle at 80% 16%, rgba(255, 255, 255, 0.05), transparent 25%),
+        linear-gradient(180deg, #1a9a9a 0%, var(--color-desktop) 38%, #007777 100%);
+}
+
+.wallpaper-blue {
+    background:
+        radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.1), transparent 22%),
+        linear-gradient(180deg, #5f93c7 0%, #3b6fa2 42%, #315b86 100%);
+}
+
+.wallpaper-dark {
+    background:
+        radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.06), transparent 20%),
+        linear-gradient(180deg, #3b3b3b 0%, #2d2d2d 55%, #222222 100%);
+}
+
+.wallpaper-clouds {
+    background:
+        radial-gradient(circle at 18% 28%, rgba(255, 255, 255, 0.94), transparent 20%),
+        radial-gradient(circle at 38% 18%, rgba(255, 255, 255, 0.9), transparent 18%),
+        radial-gradient(circle at 68% 24%, rgba(255, 255, 255, 0.88), transparent 16%),
+        linear-gradient(180deg, #7bc0ff 0%, #5aa8f5 55%, #4d98e6 100%);
+}
+
+.wallpaper-setup {
+    background:
+        linear-gradient(90deg, #000000 0%, #000000 14%, transparent 14%),
+        linear-gradient(180deg, #062675 0%, #001258 55%, #000a3f 100%);
+}
+
+/* ==========================================================================
+   20. Scrollbars And Browser Defaults
+   ========================================================================== */
+
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+    background: var(--color-surface);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-surface-light);
+    border-left: 1px solid var(--color-white);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    border-left: 1px solid var(--color-white);
+    border-right: 1px solid var(--color-black);
+    border-bottom: 1px solid var(--color-black);
+    box-shadow: inset 1px 1px 0 var(--color-surface-light), inset -1px -1px 0 var(--color-surface-dark);
+}
+
+::-webkit-scrollbar-button:single-button {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-white);
+    border-left: 1px solid var(--color-white);
+    border-right: 1px solid var(--color-black);
+    border-bottom: 1px solid var(--color-black);
+}
+
+/* ==========================================================================
+   21. Final Pass Polish
+   ========================================================================== */
+
+body.is-window-interacting {
+    user-select: none;
+    cursor: default;
+}
+
+.window {
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.22);
+}
+
+.window--fixed .window-resizer {
+    display: none;
+}
+
+.window.is-maximized {
+    padding: 2px;
+}
+
+.window.is-interacting {
+    will-change: left, top, width, height;
+}
+
+.window-titlebar,
+.window-titlebar--active {
+    letter-spacing: 0.1px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.window-titlebar,
+.window:not(.focused) .window-titlebar {
+    background: linear-gradient(90deg, #787878 0%, #909090 55%, #b7b7b7 100%);
+}
+
+.window.focused .window-titlebar,
+.window-titlebar--active {
+    background: linear-gradient(90deg, #0a246a 0%, #1243a7 65%, #6fa6f0 100%);
+}
+
+.window-control:disabled,
+.toolbar-button:disabled,
+.toolbar-button.is-disabled {
+    color: var(--color-surface-dark);
+    text-shadow: 1px 1px 0 var(--color-white);
+    opacity: 1;
+}
+
+.window-control:disabled .window-control__glyph,
+.toolbar-button:disabled .app-toolbar-icon,
+.toolbar-button.is-disabled .app-toolbar-icon {
+    opacity: 0.35;
+}
+
+.window-control:disabled:active,
+.toolbar-button:disabled:active,
+.toolbar-button.is-disabled:active {
+    box-shadow: inset 1px 1px 0 var(--color-surface-light), inset -1px -1px 0 var(--color-surface-dark);
+}
+
+.taskbar-button {
+    position: relative;
+    padding-right: 8px;
+}
+
+.taskbar-button > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.taskbar-button.is-minimized {
+    font-weight: 400;
+}
+
+.taskbar-button.is-active::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18) 1px, transparent 1px, transparent 3px);
+    pointer-events: none;
+}
+
+.system-tray {
+    gap: 1px;
+    padding: 1px 5px 1px 4px;
+}
+
+.clock-button {
+    min-width: 57px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+}
+
+.clock {
+    font-family: "MS Sans Serif", Tahoma, sans-serif;
+}
+
+.start-menu {
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.28);
+}
+
+.start-menu__sidebar {
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.25);
+}
+
+.start-item {
+    gap: 4px;
+    padding-right: 8px;
+}
+
+.start-item__arrow {
+    width: 10px;
+    text-align: center;
+    margin-left: 10px;
+    font-size: 9px;
+}
+
+.menu-bar__item {
+    position: relative;
+    min-width: 42px;
+    justify-content: center;
+}
+
+.menu-bar__item:focus-visible {
+    outline: 1px dotted var(--color-black);
+    outline-offset: -3px;
+}
+
+.context-menu,
+.submenu,
+.menu-dropdown {
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.22);
+}
+
+.context-menu__item,
+.menu-dropdown__item {
+    gap: 8px;
+    justify-content: space-between;
+    min-width: 172px;
+    padding: 3px 10px 3px 6px;
+}
+
+.context-menu__item.is-focused,
+.menu-dropdown__item.is-focused {
+    background: var(--color-selection);
+    color: var(--color-white);
+}
+
+.context-menu__check {
+    width: 12px;
+    flex: 0 0 12px;
+    text-align: center;
+}
+
+.context-menu__label,
+.menu-dropdown__label {
+    flex: 1 1 auto;
+}
+
+.context-menu__shortcut,
+.menu-dropdown__shortcut {
+    min-width: 42px;
+    text-align: right;
+    opacity: 0.85;
+}
+
+.status-field {
+    box-shadow: inset 1px 1px 0 var(--color-black), inset -1px -1px 0 var(--color-surface-light);
+}
+
+.desktop-icon__label,
+.shell-item__name {
+    min-height: 28px;
+}
+
+.desktop-icon__rename {
+    width: 100%;
+    height: auto;
+    margin-top: -1px;
+    padding: 1px 3px;
+    text-align: center;
+}
+
+.dialog__fields {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.browser-toolbar__cluster .toolbar-button,
+.window-toolbar .toolbar-button {
+    min-width: 26px;
+}
+
+.toolbar-address__input,
+.browser-address__input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.paint__selection {
+    background: rgba(10, 36, 106, 0.08);
+}
+
+.calculator__display {
+    overflow: hidden;
+    letter-spacing: 0.35px;
+}
+
+.cmd__screen {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* ==========================================================================
+   22. Responsive Guardrails
+   ========================================================================== */
+
+@media (max-width: 980px) {
+    .taskbar-button {
+        min-width: 92px;
+    }
+
+    .start-menu {
+        min-width: 186px;
+    }
+
+    .boot-brand__microsoft {
+        font-size: 58px;
+    }
+
+    .boot-brand__windows {
+        font-size: 70px;
+    }
+}
+
+@media (max-height: 640px) {
+    .desktop-icon {
+        min-height: 68px;
+    }
+
+    .calendar-panel {
+        bottom: calc(var(--taskbar-height) + 2px);
+    }
+}

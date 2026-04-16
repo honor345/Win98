@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 98</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="boot-screen" class="overlay overlay--boot">
+        <div class="boot-brand">
+            <div class="boot-brand__microsoft">Microsoft<sup>&reg;</sup></div>
+            <div class="boot-brand__windows">Windows<sup>98</sup></div>
+        </div>
+        <div class="boot-progress win-inset">
+            <div class="boot-progress__bar"></div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="overlay overlay--login hidden">
+        <div class="login-dialog win-shell">
+            <div class="window-titlebar window-titlebar--active">
+                <div class="window-title">Welcome to Windows</div>
+                <div class="window-controls">
+                    <button type="button" class="window-control window-control--close" data-login-dismiss aria-label="Close">X</button>
+                </div>
+            </div>
+            <div class="login-dialog__body">
+                <div class="login-dialog__brand">
+                    <div class="icon icon-win-logo icon-win-logo--large">
+                        <div class="win-logo__panel win-logo__panel--red"></div>
+                        <div class="win-logo__panel win-logo__panel--blue"></div>
+                        <div class="win-logo__panel win-logo__panel--green"></div>
+                        <div class="win-logo__panel win-logo__panel--yellow"></div>
+                    </div>
+                </div>
+                <div class="login-dialog__form">
+                    <p class="login-dialog__copy">Type a user name and password to log on to Windows.</p>
+                    <label class="form-row">
+                        <span>User name:</span>
+                        <input id="login-user" class="field field--classic" type="text" value="Administrator" autocomplete="username">
+                    </label>
+                    <label class="form-row">
+                        <span>Password:</span>
+                        <input id="login-pass" class="field field--classic" type="password" autocomplete="current-password">
+                    </label>
+                </div>
+                <div class="login-dialog__actions">
+                    <button type="button" class="win-button" id="login-ok">OK</button>
+                    <button type="button" class="win-button" id="login-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screensaver" class="overlay overlay--screensaver hidden">
+        <div id="screensaver-logo" class="icon icon-win-logo icon-win-logo--screensaver">
+            <div class="win-logo__panel win-logo__panel--red"></div>
+            <div class="win-logo__panel win-logo__panel--blue"></div>
+            <div class="win-logo__panel win-logo__panel--green"></div>
+            <div class="win-logo__panel win-logo__panel--yellow"></div>
+        </div>
+    </div>
+
+    <main id="os-shell" class="os-shell">
+        <section id="desktop" class="desktop" tabindex="0" aria-label="Desktop">
+            <div id="desktop-selection" class="selection-rectangle hidden"></div>
+        </section>
+
+        <div id="windows-container" class="windows-container"></div>
+        <div id="modal-container" class="modal-container"></div>
+
+        <div id="context-menu" class="context-menu win-shell hidden" aria-hidden="true"></div>
+
+        <aside id="start-menu" class="start-menu win-shell hidden" aria-hidden="true">
+            <div class="start-menu__sidebar">
+                <span><b>Windows</b> 98</span>
+            </div>
+            <div class="start-menu__items">
+                <div class="start-item has-submenu" data-menu-item tabindex="-1">
+                    <div class="sm-icon"><div class="icon icon-programs-small"></div></div>
+                    <span class="start-item__label">Programs</span>
+                    <span class="start-item__arrow">&#9654;</span>
+                    <div class="submenu win-shell">
+                        <div class="start-item has-submenu" data-menu-item tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-folder-small"></div></div>
+                            <span class="start-item__label">Accessories</span>
+                            <span class="start-item__arrow">&#9654;</span>
+                            <div class="submenu win-shell">
+                                <div class="start-item" data-menu-item data-app="calculator" tabindex="-1">
+                                    <div class="sm-icon"><div class="icon icon-calc-small"></div></div>
+                                    <span class="start-item__label">Calculator</span>
+                                </div>
+                                <div class="start-item" data-menu-item data-app="notepad" tabindex="-1">
+                                    <div class="sm-icon"><div class="icon icon-doc-small"></div></div>
+                                    <span class="start-item__label">Notepad</span>
+                                </div>
+                                <div class="start-item" data-menu-item data-app="paint" tabindex="-1">
+                                    <div class="sm-icon"><div class="icon icon-paint-small"></div></div>
+                                    <span class="start-item__label">Paint</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="start-item has-submenu" data-menu-item tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-folder-small"></div></div>
+                            <span class="start-item__label">Games</span>
+                            <span class="start-item__arrow">&#9654;</span>
+                            <div class="submenu win-shell">
+                                <div class="start-item" data-menu-item data-app="minesweeper" tabindex="-1">
+                                    <div class="sm-icon"><div class="icon icon-mine-small"></div></div>
+                                    <span class="start-item__label">Minesweeper</span>
+                                </div>
+                                <div class="start-item" data-menu-item data-app="solitaire" tabindex="-1">
+                                    <div class="sm-icon"><div class="icon icon-cards-small"></div></div>
+                                    <span class="start-item__label">Solitaire</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="start-item" data-menu-item data-app="ms-dos" tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-dos-small"></div></div>
+                            <span class="start-item__label">MS-DOS Prompt</span>
+                        </div>
+                        <div class="start-item" data-menu-item data-app="internet-explorer" tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-ie-small"></div></div>
+                            <span class="start-item__label">Internet Explorer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="start-item has-submenu" data-menu-item tabindex="-1">
+                    <div class="sm-icon"><div class="icon icon-doc-small"></div></div>
+                    <span class="start-item__label">Documents</span>
+                    <span class="start-item__arrow">&#9654;</span>
+                    <div class="submenu win-shell">
+                        <div class="start-item" data-menu-item data-app="my-documents" tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-folder-small"></div></div>
+                            <span class="start-item__label">My Documents</span>
+                        </div>
+                        <div class="start-item is-disabled" data-menu-item tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-doc-small"></div></div>
+                            <span class="start-item__label">Recent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="start-item has-submenu" data-menu-item tabindex="-1">
+                    <div class="sm-icon"><div class="icon icon-settings-small"></div></div>
+                    <span class="start-item__label">Settings</span>
+                    <span class="start-item__arrow">&#9654;</span>
+                    <div class="submenu win-shell">
+                        <div class="start-item" data-menu-item data-app="control-panel" tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-control-small"></div></div>
+                            <span class="start-item__label">Control Panel</span>
+                        </div>
+                        <div class="start-item" data-menu-item data-shell-action="open-display-properties" tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-display-small"></div></div>
+                            <span class="start-item__label">Display</span>
+                        </div>
+                        <div class="start-item" data-menu-item data-shell-action="open-date-time" tabindex="-1">
+                            <div class="sm-icon"><div class="icon icon-clock-small"></div></div>
+                            <span class="start-item__label">Date/Time</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="start-item" data-menu-item data-shell-action="open-find" tabindex="-1">
+                    <div class="sm-icon"><div class="icon icon-find-small"></div></div>
+                    <span class="start-item__label">Find</span>
+                </div>
+
+                <div class="start-item" data-menu-item data-shell-action="open-help" tabindex="-1">
+                    <div class="sm-icon"><div class="icon icon-help-small">?</div></div>
+                    <span class="start-item__label">Help</span>
+                </div>
+
+                <div class="start-item" data-menu-item data-app="run-dialog" tabindex="-1">
+                    <div class="sm-icon"><div class="icon icon-run-small"></div></div>
+                    <span class="start-item__label">Run...</span>
+                </div>
+
+                <div class="menu-divider"></div>
+
+                <div class="start-item" data-menu-item data-shell-action="open-shutdown" tabindex="-1">
+                    <div class="sm-icon"><div class="icon icon-shutdown-small"></div></div>
+                    <span class="start-item__label">Shut Down...</span>
+                </div>
+            </div>
+        </aside>
+
+        <section id="calendar-panel" class="calendar-panel win-shell hidden" aria-hidden="true">
+            <div class="calendar-panel__header" id="calendar-month-year"></div>
+            <div class="calendar-panel__grid" id="calendar-grid"></div>
+        </section>
+
+        <div id="balloon-notification" class="balloon hidden" role="status" aria-live="polite">
+            <button type="button" class="balloon__close" data-balloon-close aria-label="Close">x</button>
+            <div class="balloon__title"></div>
+            <div class="balloon__message"></div>
+        </div>
+
+        <div id="tooltip" class="tooltip hidden" role="tooltip"></div>
+
+        <footer id="taskbar" class="taskbar">
+            <button id="start-button" class="start-button win-shell" type="button" aria-haspopup="true" aria-expanded="false">
+                <div class="icon icon-win-logo">
+                    <div class="win-logo__panel win-logo__panel--red"></div>
+                    <div class="win-logo__panel win-logo__panel--blue"></div>
+                    <div class="win-logo__panel win-logo__panel--green"></div>
+                    <div class="win-logo__panel win-logo__panel--yellow"></div>
+                </div>
+                <span class="start-button__label">Start</span>
+            </button>
+
+            <div class="taskbar__divider"></div>
+
+            <div id="taskbar-tasks" class="taskbar__tasks" aria-label="Open windows"></div>
+
+            <div id="system-tray" class="system-tray win-inset">
+                <button type="button" class="tray-button" data-tray-action="volume" data-tooltip="Volume Control">
+                    <div class="tray-icon tray-icon--volume"></div>
+                </button>
+                <button type="button" class="tray-button" data-tray-action="network" data-tooltip="Dial-Up Networking">
+                    <div class="tray-icon tray-icon--network"></div>
+                </button>
+                <button type="button" class="tray-button" data-tray-action="printer" data-tooltip="Printer">
+                    <div class="tray-icon tray-icon--printer"></div>
+                </button>
+                <button type="button" id="clock-button" class="clock-button" data-tooltip="Date/Time">
+                    <span id="clock" class="clock"></span>
+                </button>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
